@@ -176,10 +176,10 @@ static void _handle_turntable(
         }
 
         _tt_state_for_btn[i] = _handle_turntable_as_button(
-            config, tt[i], _tt_last_raw[i], _tt_state_for_btn[i], &state[i]);
+            config, tt[i], _tt_last_raw[i], _tt_state_for_btn[i], &state[0]);
 
         _tt_state_for_analog[i] = _handle_turntable_analog(
-            config, tt[i], _tt_last_raw[i], _tt_state_for_analog[i], &state[i]);
+            config, tt[i], _tt_last_raw[i], _tt_state_for_analog[i], &state[0]);
 
         _tt_last_raw[i] = tt[i];
 
@@ -195,47 +195,44 @@ static void _handle_turntable(
 static void _handle_buttons_14keys(uint16_t keys, XUSB_REPORT *state)
 {
     state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P1_1, XUSB_GAMEPAD_A);
+        _check_assign_key(keys, IIDX_IO_KEY_P2_1, XUSB_GAMEPAD_Y);
     state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P1_2, XUSB_GAMEPAD_B);
+        _check_assign_key(keys, IIDX_IO_KEY_P1_2, XUSB_GAMEPAD_LEFT_SHOULDER) |
+        _check_assign_key(keys, IIDX_IO_KEY_P2_2, XUSB_GAMEPAD_LEFT_SHOULDER);
     state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P1_3, XUSB_GAMEPAD_X);
-    state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P1_4, XUSB_GAMEPAD_Y);
-    state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P1_5, XUSB_GAMEPAD_LEFT_SHOULDER);
-    state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P1_6, XUSB_GAMEPAD_RIGHT_SHOULDER);
-    state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P1_7, XUSB_GAMEPAD_BACK);
-
-    state[1].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P2_1, XUSB_GAMEPAD_A);
-    state[1].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P2_2, XUSB_GAMEPAD_B);
-    state[1].wButtons |=
         _check_assign_key(keys, IIDX_IO_KEY_P2_3, XUSB_GAMEPAD_X);
-    state[1].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P2_4, XUSB_GAMEPAD_Y);
-    state[1].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P2_5, XUSB_GAMEPAD_LEFT_SHOULDER);
-    state[1].wButtons |=
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P2_4, XUSB_GAMEPAD_LEFT_THUMB);
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P2_5, XUSB_GAMEPAD_A);
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P1_6, XUSB_GAMEPAD_RIGHT_SHOULDER) |
         _check_assign_key(keys, IIDX_IO_KEY_P2_6, XUSB_GAMEPAD_RIGHT_SHOULDER);
-    state[1].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P2_7, XUSB_GAMEPAD_BACK);
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P2_7, XUSB_GAMEPAD_B);
+
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P1_1, XUSB_GAMEPAD_DPAD_UP);
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P1_3, XUSB_GAMEPAD_DPAD_LEFT);
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P1_4, XUSB_GAMEPAD_RIGHT_THUMB);
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P1_5, XUSB_GAMEPAD_DPAD_DOWN);
+    state[0].wButtons |=
+        _check_assign_key(keys, IIDX_IO_KEY_P1_7, XUSB_GAMEPAD_DPAD_RIGHT);
 }
 
 static void _handle_buttons_panel(uint8_t panel, XUSB_REPORT *state)
 {
-    state[0].wButtons |= _check_assign_key(
-        panel, IIDX_IO_PANEL_LIGHT_P1_START, XUSB_GAMEPAD_START);
-    state[1].wButtons |= _check_assign_key(
-        panel, IIDX_IO_PANEL_LIGHT_P2_START, XUSB_GAMEPAD_START);
+    state[0].wButtons |= 
+        _check_assign_key(panel, IIDX_IO_PANEL_LIGHT_P1_START, XUSB_GAMEPAD_START) |
+        _check_assign_key(panel, IIDX_IO_PANEL_LIGHT_P2_START, XUSB_GAMEPAD_START);
 
-    state[2].wButtons |=
-        _check_assign_key(panel, IIDX_IO_PANEL_LIGHT_VEFX, XUSB_GAMEPAD_B);
-    state[2].wButtons |=
-        _check_assign_key(panel, IIDX_IO_PANEL_LIGHT_EFFECT, XUSB_GAMEPAD_A);
+    state[0].wButtons |=
+        _check_assign_key(panel, IIDX_IO_PANEL_LIGHT_VEFX, XUSB_GAMEPAD_GUIDE);
+    state[0].wButtons |=
+        _check_assign_key(panel, IIDX_IO_PANEL_LIGHT_EFFECT, XUSB_GAMEPAD_BACK);
 }
 
 static void _handle_buttons_system(uint8_t system, XUSB_REPORT *state)
