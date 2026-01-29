@@ -95,27 +95,27 @@ static uint16_t _check_assign_key(uint16_t input, size_t idx_in, size_t bit_out)
 
 static int32_t _handle_turntable_analog(
     const struct vigem_iidxio_config *config,
+    uint8_t tt_idx,
     uint8_t tt_cur,
     uint8_t tt_last,
     int32_t tt_state,
-    XUSB_REPORT *pad_state)
-{
-    uint8_t tt_left = 0;
+    XUSB_REPORT *pad_state){
+        
     int32_t state = tt_state;
 
     if (config->tt.analog.relative) {
         state = _convert_relative_analog(
             tt_cur, tt_last, state, config->tt.analog.relative_sensitivity);
         
-        if (tt_cur == tt_left){
+        if (tt_idx == 0) {
             pad_state->sThumbLX =
                 _filter_floor(state, config->tt.analog.relative_sensitivity / 2);
         } else {
             pad_state->sThumbRX =
-                _filter_floor(state, config->tt.analog.relative_sensitivity / 2);
+                _filter_floor(-state, config->tt.analog.relative_sensitivity / 2);
         }
     } else {
-        if (tt_cur == tt_left){
+        if (tt_idx == 0) {
             pad_state->sThumbLX = _convert_analog_to_s16(tt_cur);
         } else {
             pad_state->sThumbRX = _convert_analog_to_s16(tt_cur);
@@ -189,7 +189,7 @@ static void _handle_turntable(
         //     config, tt[i], _tt_last_raw[i], _tt_state_for_btn[i], &state[0]);
 
         _tt_state_for_analog[i] = _handle_turntable_analog(
-            config, tt[i], _tt_last_raw[i], _tt_state_for_analog[i], &state[0]);
+            config, i, tt[i], _tt_last_raw[i], _tt_state_for_analog[i], &state[0]);
 
         _tt_last_raw[i] = tt[i];
 
