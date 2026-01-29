@@ -59,7 +59,7 @@ static void _vigem_iidxio_config_init(struct cconfig *config)
         VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE,
         "How fast the relative analog returns to center when not being spun "
         "(100 to 1000, recommend 200)."
-    )
+    );
 
     cconfig_util_set_int(
         config,
