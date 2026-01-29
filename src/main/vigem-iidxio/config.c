@@ -9,6 +9,8 @@
     "vigem.iidxio.tt.anlog.relative"
 #define VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_SENSITIVITY_KEY \
     "vigem.iidxio.tt.anlog.relative_sensitivity"
+#define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY \
+    "vigem.iidxio.tt.anlog.relative_return_center"
 #define VIGEM_IIDXIO_CONFIG_TT_BUTTON_DEBOUNCE_KEY \
     "vigem.iidxio.tt.button.debounce"
 #define VIGEM_IIDXIO_CONFIG_TT_BUTTON_THRESHOLD_KEY \
@@ -25,6 +27,7 @@
 
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_VALUE false
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SENSITIVITY_VALUE 1024
+#define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE 200
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_DEBOUNCE_VALUE 20
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_THRESHOLD_VALUE 2
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_DEBUG_OUTPUT_VALUE false
@@ -49,6 +52,14 @@ static void _vigem_iidxio_config_init(struct cconfig *config)
         "Sensitivity value for relative mode (1 to 32767). Tweak if you are "
         "having issues with "
         "jittering/misfiring/unresponsiveness");
+
+    cconfig_util_set_int(
+        config,
+        VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
+        VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE,
+        "How fast the relative analog returns to center when not being spun "
+        "(100 to 1000, recommend 200)."
+    )
 
     cconfig_util_set_int(
         config,
@@ -127,6 +138,18 @@ static void _vigem_iidxio_config_get(
             "to default '%d'",
             VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_SENSITIVITY_KEY,
             VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SENSITIVITY_VALUE);
+    }
+
+    if (!cconfig_util_get_int(
+            config,
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
+            &vigem_config->tt.analog.relative_return_center,
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE)) {
+        log_warning(
+            "Invalid value for key '%s' specified, fallback "
+            "to default '%d'",
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE);
     }
 
     if (!cconfig_util_get_int(

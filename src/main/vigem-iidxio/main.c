@@ -49,13 +49,13 @@ static int16_t _filter_floor(int32_t value, int16_t floor)
 }
 
 static int32_t _convert_relative_analog(
-    uint8_t val, uint8_t last, int32_t buffered_last, int16_t multiplier)
+    uint8_t val, uint8_t last, int32_t buffered_last, int16_t multiplier, int32_t return_center)
 {
     int16_t delta = get_wrapped_delta_s16(val, last, UINT8_MAX);
 
     if (delta == 0) {
         // ease the stick back to 0 like a real stick would
-        return buffered_last / 2.f;
+        return buffered_last / (return_center / 100.f);
     } else {
         int64_t result = buffered_last;
         result += delta * multiplier;
@@ -100,12 +100,12 @@ static int32_t _handle_turntable_analog(
     uint8_t tt_last,
     int32_t tt_state,
     XUSB_REPORT *pad_state){
-        
+
     int32_t state = tt_state;
 
     if (config->tt.analog.relative) {
         state = _convert_relative_analog(
-            tt_cur, tt_last, state, config->tt.analog.relative_sensitivity);
+            tt_cur, tt_last, state, config->tt.analog.relative_sensitivity, config->tt.analog.relative_return_center);
         
         if (tt_idx == 0) {
             pad_state->sThumbLX =
@@ -212,7 +212,7 @@ static void _handle_buttons_14keys(uint16_t keys, XUSB_REPORT *state)
     state[0].wButtons |=
         _check_assign_key(keys, IIDX_IO_KEY_P2_3, XUSB_GAMEPAD_X);
     state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P2_4, XUSB_GAMEPAD_LEFT_THUMB);
+        _check_assign_key(keys, IIDX_IO_KEY_P1_4, XUSB_GAMEPAD_LEFT_THUMB);
     state[0].wButtons |=
         _check_assign_key(keys, IIDX_IO_KEY_P2_5, XUSB_GAMEPAD_A);
     state[0].wButtons |=
@@ -226,7 +226,7 @@ static void _handle_buttons_14keys(uint16_t keys, XUSB_REPORT *state)
     state[0].wButtons |=
         _check_assign_key(keys, IIDX_IO_KEY_P1_3, XUSB_GAMEPAD_DPAD_LEFT);
     state[0].wButtons |=
-        _check_assign_key(keys, IIDX_IO_KEY_P1_4, XUSB_GAMEPAD_RIGHT_THUMB);
+        _check_assign_key(keys, IIDX_IO_KEY_P2_4, XUSB_GAMEPAD_RIGHT_THUMB);
     state[0].wButtons |=
         _check_assign_key(keys, IIDX_IO_KEY_P1_5, XUSB_GAMEPAD_DPAD_DOWN);
     state[0].wButtons |=

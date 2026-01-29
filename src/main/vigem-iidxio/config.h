@@ -10,6 +10,7 @@ struct vigem_iidxio_config {
         struct analog {
             bool relative;
             int32_t relative_sensitivity;
+            int32_t relative_return_center;
         } analog;
 
         struct button {
