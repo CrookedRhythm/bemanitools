@@ -144,7 +144,8 @@ static void _vigem_iidxio_config_get(
             config,
             VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
             &vigem_config->tt.analog.relative_return_center,
-            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE)) {
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE) || \
+            vigem_config->tt.analog.relative_return_center < 100) {
         log_warning(
             "Invalid value for key '%s' specified, fallback "
             "to default '%d'",
