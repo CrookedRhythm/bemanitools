@@ -100,16 +100,26 @@ static int32_t _handle_turntable_analog(
     int32_t tt_state,
     XUSB_REPORT *pad_state)
 {
+    uint8_t tt_left = 0;
     int32_t state = tt_state;
 
     if (config->tt.analog.relative) {
         state = _convert_relative_analog(
             tt_cur, tt_last, state, config->tt.analog.relative_sensitivity);
-
-        pad_state->sThumbLX =
-            _filter_floor(state, config->tt.analog.relative_sensitivity / 2);
+        
+        if (tt_cur == tt_left){
+            pad_state->sThumbLX =
+                _filter_floor(state, config->tt.analog.relative_sensitivity / 2);
+        } else {
+            pad_state->sThumbRX =
+                _filter_floor(state, config->tt.analog.relative_sensitivity / 2);
+        }
     } else {
-        pad_state->sThumbLX = _convert_analog_to_s16(tt_cur);
+        if (tt_cur == tt_left){
+            pad_state->sThumbLX = _convert_analog_to_s16(tt_cur);
+        } else {
+            pad_state->sThumbRX = _convert_analog_to_s16(tt_cur);
+        }
     }
 
     return state;
@@ -175,8 +185,8 @@ static void _handle_turntable(
             printf("TT (%d): last_raw %d, raw %d, ", i, _tt_last_raw[i], tt[i]);
         }
 
-        _tt_state_for_btn[i] = _handle_turntable_as_button(
-            config, tt[i], _tt_last_raw[i], _tt_state_for_btn[i], &state[0]);
+        // _tt_state_for_btn[i] = _handle_turntable_as_button(
+        //     config, tt[i], _tt_last_raw[i], _tt_state_for_btn[i], &state[0]);
 
         _tt_state_for_analog[i] = _handle_turntable_analog(
             config, tt[i], _tt_last_raw[i], _tt_state_for_analog[i], &state[0]);
