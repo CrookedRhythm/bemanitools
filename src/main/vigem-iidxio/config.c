@@ -79,7 +79,7 @@ static void _vigem_iidxio_config_init(struct cconfig *config)
         VIGEM_IIDXIO_CONFIG_TT_BUTTON_ENABLE,
         VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_ENABLE_VALUE,
         "Enable button turntable mapping mode"
-    )
+    );
 
     cconfig_util_set_int(
         config,
