@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - vigem-iidx
       - vigem-iidx-diva
 
 jobs:

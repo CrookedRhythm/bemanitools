@@ -5,17 +5,22 @@
 
 #include "util/log.h"
 
+#define VIGEM_IIDXIO_CONFIG_TT_ANALOG_ENABLE_KEY \
+    "vigem.iidxio.tt.anlog.enable"
 #define VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_KEY \
     "vigem.iidxio.tt.anlog.relative"
 #define VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_SENSITIVITY_KEY \
     "vigem.iidxio.tt.anlog.relative_sensitivity"
-#define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY \
+#define VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY \
     "vigem.iidxio.tt.anlog.relative_return_center"
+#define VIGEM_IIDXIO_CONFIG_TT_BUTTON_ENABLE \
+    "vigem.iidxio.tt.button.enable"
 #define VIGEM_IIDXIO_CONFIG_TT_BUTTON_DEBOUNCE_KEY \
     "vigem.iidxio.tt.button.debounce"
 #define VIGEM_IIDXIO_CONFIG_TT_BUTTON_THRESHOLD_KEY \
     "vigem.iidxio.tt.button.threshold"
-#define VIGEM_IIDXIO_CONFIG_TT_DEBUG_OUTPUT_KEY "vigem.iidxio.tt.debug_output"
+#define VIGEM_IIDXIO_CONFIG_TT_DEBUG_OUTPUT_KEY \
+    "vigem.iidxio.tt.debug_output"
 #define VIGEM_IIDXIO_CONFIG_CAB_LIGHT_ENABLE_KEYLIGHT_KEY \
     "vigem.iidxio.cab_light.enable_keylight"
 #define VIGEM_IIDXIO_CONFIG_CAB_LIGHT_LIGHT_MODE_KEY \
@@ -25,9 +30,11 @@
 #define VIGEM_IIDXIO_CONFIG_CAB_LIGHT_TEXT_SCROLL_CYCLE_TIME_MS_KEY \
     "vigem.iidxio.cab_light.text_scroll_cycle_time_ms"
 
+#define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_ENABLE_VALUE true
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_VALUE false
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SENSITIVITY_VALUE 1024
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE 100
+#define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_ENABLE_VALUE false
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_DEBOUNCE_VALUE 20
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_THRESHOLD_VALUE 2
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_DEBUG_OUTPUT_VALUE false
@@ -39,6 +46,12 @@
 
 static void _vigem_iidxio_config_init(struct cconfig *config)
 {
+    cconfig_util_set_bool(
+        config,
+        VIGEM_IIDXIO_CONFIG_TT_ANALOG_ENABLE_KEY,
+        VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_ENABLE_VALUE,
+        "Enable analog turntable mapping mode");
+
     cconfig_util_set_bool(
         config,
         VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_KEY,
@@ -55,11 +68,18 @@ static void _vigem_iidxio_config_init(struct cconfig *config)
 
     cconfig_util_set_int(
         config,
-        VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
+        VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
         VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE,
         "How fast the relative analog returns to center when not being spun "
         "(1 to 32767, 1 will not return to center, recommend 100)."
     );
+
+    cconfig_util_set_bool(
+        config,
+        VIGEM_IIDXIO_CONFIG_TT_BUTTON_ENABLE,
+        VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_ENABLE_VALUE,
+        "Enable button turntable mapping mode"
+    )
 
     cconfig_util_set_int(
         config,
@@ -118,6 +138,18 @@ static void _vigem_iidxio_config_get(
 {
     if (!cconfig_util_get_bool(
             config,
+            VIGEM_IIDXIO_CONFIG_TT_ANALOG_ENABLE_KEY,
+            &vigem_config->tt.analog.enable,
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_ENABLE_VALUE)) {
+        log_warning(
+            "Invalid value for key '%s' specified, fallback "
+            "to default '%d'",
+            VIGEM_IIDXIO_CONFIG_TT_ANALOG_ENABLE_KEY,
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_ENABLE_VALUE);
+    }
+
+    if (!cconfig_util_get_bool(
+            config,
             VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_KEY,
             &vigem_config->tt.analog.relative,
             VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_VALUE)) {
@@ -142,13 +174,13 @@ static void _vigem_iidxio_config_get(
 
     if (!cconfig_util_get_int(
             config,
-            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
+            VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
             &vigem_config->tt.analog.relative_return_center,
             VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE)) {
         log_warning(
             "Invalid value for key '%s' specified, fallback "
             "to default '%d'",
-            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
+            VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
             VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE);
     }
 

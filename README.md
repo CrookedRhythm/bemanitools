@@ -2,8 +2,6 @@
 
 Version: `5.49`
 
-IIDX VIGEM Has been modified to play Project Diva FTA, FT, MegaMix
-
 [Changelog](CHANGELOG.md)
 
 A collection of tools to run [various Bemani arcade games](#supported-games).

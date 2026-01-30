@@ -8,12 +8,14 @@
 struct vigem_iidxio_config {
     struct tt {
         struct analog {
+            bool enable;
             bool relative;
             int32_t relative_sensitivity;
             int32_t relative_return_center;
         } analog;
 
         struct button {
+            bool enable;
             int32_t debounce;
             int32_t threshold;
         } button;
