@@ -55,7 +55,7 @@ static int32_t _convert_relative_analog(
 
     if (delta == 0) {
         // ease the stick back to 0 like a real stick would
-        return buffered_last / (return_center / 100.f);
+        return buffered_last / ((return_center + 99) / 100.f);
     } else {
         int64_t result = buffered_last;
         result += delta * multiplier;

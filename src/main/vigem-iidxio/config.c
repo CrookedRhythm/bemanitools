@@ -27,7 +27,7 @@
 
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_VALUE false
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SENSITIVITY_VALUE 1024
-#define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE 200
+#define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE 100
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_DEBOUNCE_VALUE 20
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_THRESHOLD_VALUE 2
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_DEBUG_OUTPUT_VALUE false
@@ -58,7 +58,7 @@ static void _vigem_iidxio_config_init(struct cconfig *config)
         VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
         VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE,
         "How fast the relative analog returns to center when not being spun "
-        "(100 to 1000, recommend 200)."
+        "(1 to 32767, 1 will not return to center, recommend 100)."
     );
 
     cconfig_util_set_int(
@@ -144,8 +144,7 @@ static void _vigem_iidxio_config_get(
             config,
             VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY,
             &vigem_config->tt.analog.relative_return_center,
-            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE) || \
-            vigem_config->tt.analog.relative_return_center < 100) {
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE)) {
         log_warning(
             "Invalid value for key '%s' specified, fallback "
             "to default '%d'",
