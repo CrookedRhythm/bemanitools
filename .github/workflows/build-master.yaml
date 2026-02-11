@@ -2,8 +2,7 @@ name: "Build bemanitools"
 
 on:
   push:
-    branches:
-      - **
+    branches: [ "**" ] 
 
 jobs:
   build:
