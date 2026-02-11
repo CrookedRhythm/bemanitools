@@ -3,8 +3,7 @@ name: "Build bemanitools"
 on:
   push:
     branches:
-      - master
-      - vigem-iidx-diva
+      - **
 
 jobs:
   build:

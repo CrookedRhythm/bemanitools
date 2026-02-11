@@ -7,6 +7,8 @@
 
 #define VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_KEY \
     "vigem.iidxio.tt.anlog.relative"
+#define VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_SLAM_KEY \
+    "vigem.iidxio.tt.anlog.relative_slam"
 #define VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_SENSITIVITY_KEY \
     "vigem.iidxio.tt.anlog.relative_sensitivity"
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_KEY \
@@ -26,6 +28,7 @@
     "vigem.iidxio.cab_light.text_scroll_cycle_time_ms"
 
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_VALUE false
+#define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SLAM_VALUE false
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SENSITIVITY_VALUE 1024
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_RETURN_CENTER_VALUE 100
 #define VIGEM_IIDXIO_CONFIG_DEFAULT_TT_BUTTON_DEBOUNCE_VALUE 20
@@ -44,6 +47,12 @@ static void _vigem_iidxio_config_init(struct cconfig *config)
         VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_KEY,
         VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_VALUE,
         "Use relative mode analog mapping instead of absolute analog values");
+
+    cconfig_util_set_bool(
+        config,
+        VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_SLAM_KEY,
+        VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SLAM_VALUE,
+        "Enable to 'slam' the analog value to max when spinning the turntable ");
 
     cconfig_util_set_int(
         config,
@@ -126,6 +135,18 @@ static void _vigem_iidxio_config_get(
             "to default '%d'",
             VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_KEY,
             VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_VALUE);
+    }
+
+    if (!cconfig_util_get_bool(
+            config,
+            VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_SLAM_KEY,
+            &vigem_config->tt.analog.relative_slam,
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SLAM_VALUE)) {
+        log_warning(
+            "Invalid value for key '%s' specified, fallback "
+            "to default '%d'",
+            VIGEM_IIDXIO_CONFIG_TT_ANALOG_RELATIVE_SLAM_KEY,
+            VIGEM_IIDXIO_CONFIG_DEFAULT_TT_ANALOG_RELATIVE_SLAM_VALUE);
     }
 
     if (!cconfig_util_get_int(

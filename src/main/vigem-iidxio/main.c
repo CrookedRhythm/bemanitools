@@ -49,13 +49,20 @@ static int16_t _filter_floor(int32_t value, int16_t floor)
 }
 
 static int32_t _convert_relative_analog(
-    uint8_t val, uint8_t last, int32_t buffered_last, int16_t multiplier, int32_t return_center)
+    uint8_t val, uint8_t last, int32_t buffered_last, int16_t multiplier, int32_t return_center, bool slam)
 {
     int16_t delta = get_wrapped_delta_s16(val, last, UINT8_MAX);
 
     if (delta == 0) {
         // ease the stick back to 0 like a real stick would
         return buffered_last / ((return_center + 99) / 100.f);
+    } else if (slam) {
+        // slam to max value
+        if (delta > 0) {
+            return INT16_MAX * 1.5;
+        } else {
+            return INT16_MIN * 1.5;
+        }
     } else {
         int64_t result = buffered_last;
         result += delta * multiplier;
@@ -105,7 +112,7 @@ static int32_t _handle_turntable_analog(
 
     if (config->tt.analog.relative) {
         state = _convert_relative_analog(
-            tt_cur, tt_last, state, config->tt.analog.relative_sensitivity, config->tt.analog.relative_return_center);
+            tt_cur, tt_last, state, config->tt.analog.relative_sensitivity, config->tt.analog.relative_return_center, config->tt.analog.relative_slam);
         
         if (tt_idx == 0) {
             pad_state->sThumbLX =
